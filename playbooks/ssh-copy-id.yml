@@ -1,0 +1,5 @@
+---
+- name: ssh-copyid 試験
+  hosts: rpm
+  roles:
+    - role: ssh-copy-id

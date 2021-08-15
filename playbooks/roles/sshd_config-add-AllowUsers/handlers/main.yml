@@ -1,0 +1,7 @@
+---
+- name: sshd 再起動
+  become: true
+  service:
+    name: sshd
+    state: restarted
+    enabled: true

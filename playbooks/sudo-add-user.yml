@@ -1,0 +1,6 @@
+---
+- name: add sudo ユーザ
+  hosts: rpm
+  become: yes
+  roles:
+    - role: sudo-add-user

@@ -1,0 +1,24 @@
+---
+# tasks file for sshd_config_check_AllowUsers_summary
+- name: 集計開始
+  set_fact:
+    summary_list: []
+  
+- name: ホスト一覧初期化
+  set_fact:
+    host_names: []
+  
+- name: ホスト一覧取得
+  set_fact:
+    host_names: "{{ host_names + [item] }}"
+  loop: "{{ groups['remote'] }}"
+
+- name: 集計
+  set_fact:
+    summary_list: "{{ summary_list + [item] }}"
+  when: "{{ hostvars[item] != '' and [item] == hostvars[item].sshd_AllowUsers_is_contain }}"
+  loop: "{{ host_names }}"
+
+- name: debug
+  debug:
+    var: summary_list 

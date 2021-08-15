@@ -1,0 +1,3 @@
+---
+sudo_delete_user:
+  - test1

@@ -1,0 +1,18 @@
+---
+- name: getPKGList.sh のコピー
+  template:
+    src: getPKGList.j2.sh
+    dest: /tmp/getPKGList.sh
+    mode: 0755
+
+- name: getPKGList.sh の実行
+  command: /bin/bash /tmp/getPKGList.sh
+  register: getPKGList_list
+
+- name: getPKGList.sh の集計
+  set_fact:
+     getPKGList_results: "{{ getPKGList_list.stdout_lines }}"
+
+- name: getPKList.sh の表示
+  debug:
+    msg: "{{ getPKGList_results }}"

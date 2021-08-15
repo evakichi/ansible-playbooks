@@ -1,0 +1,7 @@
+---
+- name: raspberry-piのセットアップ
+  hosts: raspberry-pi
+  become: true
+  remote_user: pi
+  roles:
+    - role: raspberry-pi-setup

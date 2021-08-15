@@ -1,0 +1,9 @@
+---
+# tasks file for sshd_config_check_AllowUsers
+- import_tasks: check.yml
+  tags: 
+    - check
+- import_tasks: summary.yml
+  tags: 
+    - check
+    - summary

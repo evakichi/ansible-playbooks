@@ -1,0 +1,7 @@
+---
+# tasks file for sudo_delete_user
+- name: sudoers.d からのファイル削除
+  file:
+    path: /etc/sudoers.d/{{ item | replace(".","_")}}
+    state: absent
+  loop: "{{ sudo_delete_user }}"

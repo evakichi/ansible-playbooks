@@ -1,0 +1,13 @@
+---
+# tasks file for sudo_add_user
+- name: sudoers.d へのファイル追加
+  file:
+    path: /etc/sudoers.d/{{ item | replace(".","_")}}
+    state: touch
+  loop: "{{ sudo_add_user }}"
+
+- name: sudores.d/{{ sudo_add_user | join(' ') }} への設定追加
+  lineinfile:
+    path: /etc/sudoers.d/{{ item | replace(".","_") }}
+    line: '{{ item }} ALL=(ALL) ALL'
+  loop: "{{ sudo_add_user }}"

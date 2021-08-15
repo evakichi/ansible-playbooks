@@ -1,0 +1,55 @@
+---
+- include_vars:
+    file: user_id_1001.yml
+
+# password generate via "openssl passwd -6 -salt=$RANDOM "
+- name: adduser(1001)
+  user:
+    name: "{{ target_username }}"
+    uid: "{{ target_user_id }}"
+    state: present
+    password: "{{ target_passwd }}"
+    comment: "{{ target_comment }}"
+
+- include_vars:
+    file: user_id_1002.yml
+
+# password generate via "openssl passwd -6 -salt=$RANDOM "
+- name: adduser(1002)
+  user:
+    name: "{{ target_username }}"
+    uid: "{{ target_user_id }}"
+    state: present
+    password: "{{ target_passwd }}"
+    comment: "{{ target_comment }}"
+
+- name: Set authorized keys taken from url for pi
+  authorized_key:
+    user: pi
+    state: present
+    key: https://github.com/evakichi.keys
+
+- name: Set authorized keys taken from url for evakichi
+  authorized_key:
+    user: evakichi
+    state: present
+    key: https://github.com/evakichi.keys
+
+- name: Set authorized keys taken from url for m.ishihara
+  authorized_key:
+    user: m.ishihara
+    state: present
+    key: https://github.com/evakichi.keys
+
+- name: sudoers.d へのファイル追加
+  file:
+    path: /etc/sudoers.d/{{ item | replace(".","_")}}
+    state: touch
+  loop: "{{ raspberry_pi_sudo_add_user }}"
+
+- name: sudores.d/{{ raspberry_pi_sudo_add_user | join(' ') }} への設定追加
+  lineinfile:
+    path: /etc/sudoers.d/{{ item | replace(".","_") }}
+    regexp: '^{{item}}\s+'
+    line: '{{ item }} ALL=(ALL) ALL'
+  loop: "{{ raspberry_pi_sudo_add_user }}"

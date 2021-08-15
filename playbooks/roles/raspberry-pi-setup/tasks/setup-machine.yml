@@ -1,0 +1,10 @@
+---
+- name: set hostname
+  hostname:
+    name: "{{ ansible_host }}"
+
+- name: set /etc/hosts
+  copy:
+    src: hosts
+    dest: /etc/hosts
+

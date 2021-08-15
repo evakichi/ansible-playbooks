@@ -1,0 +1,27 @@
+---
+# tasks file for sshd_config_check_AllowUsers
+- name: AllowUsersチェッカーの操作
+  become: true
+  shell: grep '^AllowUsers' /etc/ssh/sshd_config | sed 's/^AllowUsers \(.*\)/\1/g' | sed 's/^\W\+//g' |sed 's/\W\+/\n/g'
+  register: sshd_AllowUsers_results
+
+- name: リストのキャスト 
+  set_fact: 
+    sshd_AllowUsers_current_list: "{{ sshd_AllowUsers_results.stdout_lines }}"
+
+- name: debug
+  debug:
+    msg: "{{ sshd_AllowUsers_current_list }}"
+
+- name: new_list の作成
+  set_fact:
+    sshd_AllowUsers_is_contain: []
+
+- name: sshd_conifg のチェック
+  set_fact:
+    sshd_AllowUsers_is_contain: "{{ sshd_AllowUsers_is_contain +[ansible_host] }}"
+  when: "'{{ sshd_AllowUsers_check_user_list }}' in sshd_AllowUsers_current_list"
+
+- name: debug
+  debug:
+    var: sshd_AllowUsers_is_contain

@@ -1,0 +1,4 @@
+---
+# vars file for sudo_add_user
+sudo_add_user:
+  - test1

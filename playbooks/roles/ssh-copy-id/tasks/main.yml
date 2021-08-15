@@ -1,0 +1,6 @@
+---
+- name: copy to authorized_key
+  authorized_key:
+    user: evakichi
+    key: https://github.com/evakichi.keys
+    state: present

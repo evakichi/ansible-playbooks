@@ -1,0 +1,6 @@
+---
+- name: RPM バージョン調査結果取得
+  hosts: rpm
+  become: false
+  roles:
+    - role: get-package-list

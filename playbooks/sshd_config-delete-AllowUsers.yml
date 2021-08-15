@@ -1,0 +1,6 @@
+---
+- name: sshd_config の設定(delete AllowUsers)
+  hosts: sshd-target
+  become: true
+  roles:
+    - role: sshd_config-delete-AllowUsers

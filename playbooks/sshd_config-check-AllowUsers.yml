@@ -1,0 +1,6 @@
+---
+- name: sshd_config の設定確認(check AllowUsers)
+  hosts: remote
+  become: true
+  roles:
+  - role: sshd_config-check-AllowUsers

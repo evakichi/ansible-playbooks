@@ -1,0 +1,32 @@
+---
+- name: AllowUsersチェッカーの操作
+  become: true
+  shell: grep '^AllowUsers' /etc/ssh/sshd_config | sed 's/^AllowUsers \(.*\)/\1/g' | sed 's/^\W\+//g' |sed 's/\W\+/\n/g'
+  register: sshd_AllowUsers_results
+
+- name: リストのキャスト 
+  set_fact: 
+    sshd_AllowUsers_current_list: "{{ sshd_AllowUsers_results.stdout_lines }}"
+
+- name: new_list の作成
+  set_fact:
+    sshd_AllowUsers_new_list: []
+
+- name: sshd_conifg のチェック
+  set_fact:
+    sshd_AllowUsers_new_list: "{{ sshd_AllowUsers_new_list + [item] }}"
+  when: "'{{ item }}' not in sshd_AllowUsers_delete_user_list"
+  loop: "{{ sshd_AllowUsers_current_list }}"
+
+- name: リストの重複削除
+  set_fact:
+    sshd_AllowUsers_new_list: "{{ sshd_AllowUsers_new_list | unique }}"
+
+- name: ssh_config の直接編集
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^AllowUsers\s+'
+    line: AllowUsers {{ sshd_AllowUsers_new_list | join(' ') }}
+    validate: /usr/sbin/sshd -t -f %s
+  notify:
+    - sshd 再起動
